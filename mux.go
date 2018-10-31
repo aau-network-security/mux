@@ -70,6 +70,26 @@ type Router struct {
 	middlewares []middleware
 }
 
+func (r *Router) RemoveHostRoute(hostRoute string) error {
+	newRoutes := []*Route{}
+
+	for _, route := range r.routes {
+		host, err := route.GetHostTemplate()
+
+		if err != nil {
+			continue
+		}
+
+		if host != hostRoute {
+			newRoutes = append(newRoutes, route)
+		}
+	}
+
+	r.routes = newRoutes
+
+	return nil
+}
+
 // Match attempts to match the given request against the router's registered routes.
 //
 // If the request matches a route of this router or one of its subrouters the Route,
